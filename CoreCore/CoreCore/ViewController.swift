@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     var speakers: [Speaker]?
     var events: [Event]?
-    @IBOutlet weak var myLabel: UILabel!
+    @IBOutlet weak var myTextView: UITextView!
     @IBAction func myLoad(sender: AnyObject) {
         self.loadData()
     }
@@ -35,7 +35,7 @@ class ViewController: UIViewController {
     }
 
     func demoData() {
-        /* let firstStart: Bool? = NSUserDefaults.standardUserDefaults().objectForKey("firstStart") as? Bool */
+        let firstStart: Bool? = NSUserDefaults.standardUserDefaults().objectForKey("firstStart") as? Bool
         
         guard let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate else{
             print("penis")
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         print("penisleretour")
         let context = appDelegate.managedObjectContext
         
-        /* if firstStart == nil || firstStart == true { */
+        if firstStart == nil || firstStart == true {
             let speakerEntity: NSEntityDescription? = NSEntityDescription.entityForName("Speaker", inManagedObjectContext: context)
             print("BP1")
             let eventEntity: NSEntityDescription? = NSEntityDescription.entityForName("Event", inManagedObjectContext: context)
@@ -107,13 +107,13 @@ class ViewController: UIViewController {
                 print(event1.name)
                 print("BP11")
 
-            //}
+            }
             
-            //if appDelegate.managedObjectContext.hasChanges {
+            if appDelegate.managedObjectContext.hasChanges {
                 appDelegate.saveContext()
                 print("BP12")
-                //NSUserDefaults.standardUserDefaults().setObject(false, forKey: "firstStart")
-            //}
+                NSUserDefaults.standardUserDefaults().setObject(false, forKey: "firstStart")
+            }
         }
     }
     
@@ -149,16 +149,41 @@ class ViewController: UIViewController {
     
     func readData() {
         
-        guard let evenements = speakers else {
-            self.myLabel.text = "Penis"
+        guard let parleurs = speakers else {
+            self.myTextView.text = "Penis"
             return
         }
         
+        self.myTextView.text = "Le récit est ci-dessous :\n"
+        
+        self.myTextView.text = self.myTextView.text + "Nombre de parleur dans la base : " + String(parleurs.count) + "\n"
+        
+        for sp in parleurs {
+            self.myTextView.text = self.myTextView.text + "Nom :" + sp.name! + "\n"
+            if let evv = sp.event {
+                for evvv in evv {
+                    self.myTextView.text = self.myTextView.text + "even : " + evvv.name! + "\n"
+                }
+            }
+
+        }
+        
+        guard let evenements = events else {
+            self.myTextView.text = "Penis"
+            return
+        }
+        
+         self.myTextView.text = self.myTextView.text + "Nombre d'evenements dans la base : " + String(evenements.count) + "\n"
         
         for evt in evenements {
-            
-            self.myLabel.text = evt.name
+            self.myTextView.text = self.myTextView.text + "Nom :" + evt.name! + "\n"
+            if let spk = evt.speaker {
+                for set in spk {
+                    self.myTextView.text = self.myTextView.text + "spkk : " + set.name! + "\n"
+                }
+            }
         }
+
         
         // self.myLabel.text = "Penis"
         
